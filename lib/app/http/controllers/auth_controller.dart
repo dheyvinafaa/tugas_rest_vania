@@ -4,18 +4,18 @@ import 'package:vania/vania.dart';
 class AuthController extends Controller {
   Future<Response> login(Request request) async {
     request.validate({
-      'username': 'required|max_length:50',
+      'email': 'required|email',
       'password': 'required|max_length:255'
     });
 
     final Map<String, dynamic>? user = await User()
         .query()
-        .where('username', '=', request.input('username'))
+        .where('email', '=', request.input('email'))
         .first();
 
     if (user == null) {
       return Response.json(
-          {'success': false, 'message': 'Username not found'}, 404);
+          {'success': false, 'message': 'Email not found'}, 404);
     }
 
     if (!Hash().verify(request.input('password'), user['password'])) {
@@ -41,7 +41,7 @@ class AuthController extends Controller {
       'password': 'required|confirmed',
     });
 
-    final Map<String, dynamic> user = await User().query().insert({
+    final user = await User().query().insert({
       'name': request.input('name'),
       'email': request.input('email'),
       'password': Hash().make(request.input('password')),
@@ -50,7 +50,6 @@ class AuthController extends Controller {
     return Response.json({
       'success': true,
       'message': 'Register success',
-      'data': user,
     });
   }
 }
