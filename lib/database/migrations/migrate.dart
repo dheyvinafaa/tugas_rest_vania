@@ -6,6 +6,8 @@ import 'create_vendors_table.dart';
 import 'create_products_table.dart';
 import 'create_productsnotes_table.dart';
 import 'create_orderitems_table.dart';
+import 'create_users_table.dart';
+import 'create_personal_acccess_tokens_table.dart';
 
 void main(List<String> args) async {
   await MigrationConnection().setup();
@@ -26,9 +28,13 @@ class Migrate {
 		 await CreateProductsTable().up();
 		 await CreateProductsnotesTable().up();
 		 await CreateOrderitemsTable().up();
+		 await CreateUsersTable().up();
+		 await CreatePersonalAcccessTokensTable().up();
 	}
 
   dropTables() async {
+		 await CreatePersonalAcccessTokensTable().down();
+		 await CreateUsersTable().down();
 		 await CreateOrderitemsTable().down();
 		 await CreateProductsnotesTable().down();
 		 await CreateProductsTable().down();
